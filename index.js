@@ -11,22 +11,33 @@ const SEARCH_API =
 const main = document.getElementById("main");
 const form = document.getElementById("form");
 const search = document.getElementById("search");
-
-const next = document.querySelector('.nextBtn')
-const previous = document.querySelector('.previousBtn')
-
-next.addEventListener('click', () => {
-  page++
-  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&` 
-  getMovies(API_URL)
-})
-previous.addEventListener('click', () => {
-  page--
-  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&` 
-  getMovies(API_URL)
-})
+const flix = document.getElementById("flix");
+const next = document.querySelector(".nextBtn");
+const previous = document.querySelector(".previousBtn");
+const pageNumber = document.querySelector(".pageNumber");
 
 getMovies(API_URL);
+
+next.addEventListener("click", pageUp);
+previous.addEventListener("click", pageDown);
+
+function pageUp() {
+  page++;
+  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&`;
+  getMovies(API_URL);
+}
+function pageDown() {
+  page--;
+  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&`;
+  getMovies(API_URL);
+}
+flix.addEventListener("click", () => {
+  next.style.visibility = "visible";
+  previous.style.visibility = "visible";
+  page = 1;
+  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&`;
+  getMovies(API_URL);
+});
 
 async function getMovies(url) {
   const res = await fetch(url);
@@ -35,6 +46,7 @@ async function getMovies(url) {
 }
 
 function showMovies(movies) {
+  checkPage(movies);
   main.innerHTML = "";
 
   movies.forEach((movie) => {
@@ -72,11 +84,29 @@ function getClassByRate(vote) {
   }
 }
 
+function checkPage(movies) {
+  pageNumber.innerText = `Page: ${page}`;
+  if (page === 1) {
+    previous.style.cursor = "not-allowed";
+    previous.removeEventListener("click", pageDown);
+  } else if (page === movies.length) {
+    next.style.cursor = "not-allowed";
+    next.removeEventListener("click", pageUp);
+  } else {
+    next.style.cursor = "pointer";
+    next.addEventListener("click", pageUp);
+    previous.style.cursor = "pointer";
+    previous.addEventListener("click", pageDown);
+  }
+}
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const searchTerm = search.value;
 
   if (searchTerm && searchTerm !== "") {
+    next.style.visibility = "hidden";
+    previous.style.visibility = "hidden";
     getMovies(SEARCH_API + searchTerm);
     search.value = "";
   } else {
