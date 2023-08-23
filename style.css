@@ -16,14 +16,14 @@ body {
 header {
   padding: 1rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   background-color: var(--secondary-color);
   align-items: center;
 }
 header h2 {
-    color: white;
-    align-self: center;
-    margin-right: 20px;
+  color: white;
+  align-self: center;
+  margin-right: 20px;
 }
 .search {
   background-color: transparent;
@@ -43,11 +43,26 @@ header h2 {
   outline: none;
   background-color: var(--primary-color);
 }
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.buttons button {
+  border-radius: 50px;
+  height: 30px;
+  min-width: 150px;
+  margin-inline: 10px;
+}
 
 main {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
 }
+
 
 .movie {
   width: 300px;
@@ -76,34 +91,45 @@ main {
 }
 
 .movie-info span {
-    background-color: var(--primary-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-    font-weight: bold;
+  background-color: var(--primary-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-weight: bold;
 }
 
 .movie-info span.green {
-    color: lightgreen;
+  color: lightgreen;
 }
 .movie-info span.orange {
-    color: orange;
+  color: orange;
 }
 .movie-info span.red {
-    color: red;
+  color: red;
 }
 
 .overview {
-    background-color: white;
-    padding: 2rem;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    max-height: 100%;
-    transform: translateY(101%);
-    transition: transform 0.3s ease-in;
+  background-color: white;
+  padding: 2rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-height: 100%;
+  transform: translateY(101%);
+  transition: transform 0.3s ease-in;
 }
 
-.movie:hover .overview{
-    transform: translateY(0);
+.movie:hover .overview {
+  transform: translateY(0);
 }
+
+
+@media (max-width: 580px) {
+  header {
+    flex-direction: column;
+  }
+  .movie {
+    width: 80%;
+  }
+}
+
