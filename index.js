@@ -31,18 +31,30 @@ function pageDown() {
   API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&`;
   getMovies(API_URL);
 }
+
 flix.addEventListener("click", () => {
-  next.style.visibility = "visible";
-  previous.style.visibility = "visible";
-  page = 1;
-  API_URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&api_key=507b4d14bf6757bbbed6cadcff6168ec&`;
-  getMovies(API_URL);
+  window.location.reload();
 });
 
 async function getMovies(url) {
   const res = await fetch(url);
   const data = await res.json();
+  console.log(data)
   showMovies(data.results);
+}
+
+async function searchMovies(url) {
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(data)
+  if (data.total_results === 0) {
+    alert('No Results!')
+  } else {
+    pageNumber.style.visibility = 'hidden'
+    next.style.visibility = "hidden";
+    previous.style.visibility = "hidden";
+  showMovies(data.results);
+  }
 }
 
 function showMovies(movies) {
@@ -51,6 +63,9 @@ function showMovies(movies) {
 
   movies.forEach((movie) => {
     const { title, poster_path, vote_average, overview } = movie;
+
+    const voteShort = Math.floor(vote_average * 10) / 10
+  
 
     const movieEl = document.createElement("div");
 
@@ -63,7 +78,7 @@ function showMovies(movies) {
         />
         <div class="movie-info">
           <h3>${title}</h3>
-          <span class="${getClassByRate(vote_average)}">${vote_average}</span>
+          <span class="${getClassByRate(voteShort)}">${voteShort}</span>
         </div>
         <div class="overview">
           <h3>Overview</h3>
@@ -105,9 +120,7 @@ form.addEventListener("submit", (e) => {
   const searchTerm = search.value;
 
   if (searchTerm && searchTerm !== "") {
-    next.style.visibility = "hidden";
-    previous.style.visibility = "hidden";
-    getMovies(SEARCH_API + searchTerm);
+    searchMovies(SEARCH_API + searchTerm);
     search.value = "";
   } else {
     window.location.reload();
